@@ -3,7 +3,7 @@ set -Eeuo pipefail
 umask 022
 
 # ============================================================
-# Debian 一键部署：Git + Tmux + Chromium + Node.js + Mihomo + 订阅
+# Debian 一键部署：xsel + Git + Tmux + Chromium + Node.js + Mihomo + 订阅
 # 依次调用本目录下的各个安装脚本
 # ============================================================
 
@@ -28,23 +28,29 @@ run() {
     "$@"
 }
 
-# ---------- 1/6 安装 Git ----------
-run "1/6 安装 Git" bash -c '
+# ---------- 1/7 安装 xsel ----------
+run "1/7 安装 xsel" bash -c '
     DEBIAN_FRONTEND=noninteractive apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get install -y xsel
+    xsel --version
+'
+
+# ---------- 2/7 安装 Git ----------
+run "2/7 安装 Git" bash -c '
     DEBIAN_FRONTEND=noninteractive apt-get install -y git
     git --version
 '
 
-# ---------- 2/6 安装 Tmux ----------
-run "2/6 安装 Tmux" bash -c '
+# ---------- 3/7 安装 Tmux ----------
+run "3/7 安装 Tmux" bash -c '
     DEBIAN_FRONTEND=noninteractive apt-get install -y tmux
     tmux -V
 '
 
-# ---------- 3/6 安装 Chromium 并设置 BROWSER ----------
+# ---------- 4/7 安装 Chromium 并设置 BROWSER ----------
 echo
 echo "############################################################"
-echo "# 3/6 安装 Chromium 并设置 BROWSER 环境变量"
+echo "# 4/7 安装 Chromium 并设置 BROWSER 环境变量"
 echo "############################################################"
 DEBIAN_FRONTEND=noninteractive apt-get install -y chromium
 
@@ -66,20 +72,21 @@ chmod 0644 /etc/profile.d/browser.sh
 export BROWSER="$CHROMIUM_BIN"
 echo "已设置 BROWSER=$CHROMIUM_BIN"
 
-# ---------- 4/6 安装 Node.js ----------
-run "4/6 安装 Node.js" bash "$SCRIPT_DIR/install_nodejs.sh"
+# ---------- 5/7 安装 Node.js ----------
+run "5/7 安装 Node.js" bash "$SCRIPT_DIR/install_nodejs.sh"
 
-# ---------- 5/6 安装 Mihomo ----------
-run "5/6 安装 Mihomo" bash "$SCRIPT_DIR/mihomo.sh"
+# ---------- 6/7 安装 Mihomo ----------
+run "6/7 安装 Mihomo" bash "$SCRIPT_DIR/mihomo.sh"
 
-# ---------- 6/6 更新 Mihomo 订阅 ----------
-run "6/6 更新 Mihomo 订阅" bash "$SCRIPT_DIR/mihomo_sub.sh"
+# ---------- 7/7 更新 Mihomo 订阅 ----------
+run "7/7 更新 Mihomo 订阅" bash "$SCRIPT_DIR/mihomo_sub.sh"
 
 echo
 echo "############################################################"
 echo "# 全部完成"
 echo "############################################################"
 echo "Chromium : $CHROMIUM_BIN (BROWSER 已设置)"
+xsel --version
 git --version
 tmux -V
 node --version
