@@ -163,6 +163,8 @@ echo "============================================================"
 echo "4/8 下载并安装 Mihomo ${MIHOMO_VER}"
 echo "============================================================"
 
+ARCH="$(dpkg --print-architecture)"
+
 case "$ARCH" in
     amd64)
         ASSET="mihomo-linux-amd64-compatible-${MIHOMO_VER}.gz"
